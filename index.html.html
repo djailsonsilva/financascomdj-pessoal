@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finanças com Dj — Assessor de Investimentos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:       #0d1b2a;
+    --navy-mid:   #1a2d42;
+    --navy-light: #243b55;
+    --gold:       #c9a84c;
+    --gold-light: #e2c97e;
+    --cream:      #f5f0e8;
+    --cream-dark: #e8e0d0;
+    --white:      #ffffff;
+    --text-muted: #8a9ab0;
+    --font:       'Ubuntu', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font);
+    background: var(--navy);
+    color: var(--cream);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* noise texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.25rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(13,27,42,0.88);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(201,168,76,0.13);
+  }
+
+  .nav-logo {
+    font-family: var(--font);
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--gold);
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+
+  .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+
+  .nav-links a {
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-linkedin {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold) !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.1em !important;
+    transition: background 0.2s, border-color 0.2s !important;
+  }
+
+  .nav-linkedin:hover {
+    background: rgba(201,168,76,0.08) !important;
+    border-color: var(--gold) !important;
+    color: var(--gold) !important;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 7rem 4rem 5rem;
+    gap: 4rem;
+    overflow: hidden;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: -20%; right: -10%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 28px; height: 1px;
+    background: var(--gold);
+  }
+
+  .hero-title {
+    font-family: var(--font);
+    font-size: clamp(2.2rem, 3.8vw, 3.6rem);
+    font-weight: 700;
+    line-height: 1.13;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title em { font-style: normal; color: var(--gold); }
+
+  .hero-subtitle {
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    line-height: 1.78;
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+  }
+
+  .cta-group { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.9rem 1.8rem;
+    background: var(--gold);
+    color: var(--navy);
+    font-family: var(--font);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.9rem 1.8rem;
+    background: transparent;
+    color: var(--cream);
+    font-family: var(--font);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    border: 1px solid rgba(245,240,232,0.2);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ── HERO PHOTO ── */
+  .hero-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .photo-frame { position: relative; width: 340px; height: 420px; }
+
+  .photo-border {
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(201,168,76,0.28);
+    transform: translate(12px, 12px);
+  }
+
+  .photo-placeholder {
+    width: 100%; height: 100%;
+    background: var(--navy-mid);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    border: 1px solid rgba(201,168,76,0.14);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .photo-placeholder::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 50%;
+    background: linear-gradient(to top, rgba(201,168,76,0.06), transparent);
+  }
+
+  .photo-initials {
+    font-family: var(--font);
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--gold);
+    opacity: 0.35;
+    line-height: 1;
+  }
+
+  .photo-hint {
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .badge-float {
+    position: absolute;
+    bottom: -16px; right: -16px;
+    background: var(--gold);
+    color: var(--navy);
+    padding: 0.75rem 1.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.3;
+  }
+
+  /* ── STATS ── */
+  .stats-bar {
+    background: var(--navy-mid);
+    border-top: 1px solid rgba(201,168,76,0.12);
+    border-bottom: 1px solid rgba(201,168,76,0.12);
+    padding: 2.25rem 4rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .stat { text-align: center; padding: 0 2rem; border-right: 1px solid rgba(201,168,76,0.12); }
+  .stat:last-child { border-right: none; }
+
+  .stat-number {
+    font-family: var(--font);
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
+  /* ── SECTION COMMONS ── */
+  .section-label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 28px; height: 1px;
+    background: var(--gold);
+  }
+
+  .section-title {
+    font-family: var(--font);
+    font-size: clamp(1.7rem, 2.8vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.22;
+    color: var(--white);
+    margin-bottom: 1.4rem;
+  }
+
+  /* ── ABOUT ── */
+  .about {
+    padding: 6rem 4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .about-text {
+    font-size: 0.98rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    line-height: 1.85;
+    margin-bottom: 1rem;
+  }
+
+  .about-text strong { color: var(--cream); font-weight: 500; }
+
+  .credential-list { list-style: none; margin-top: 1.75rem; display: flex; flex-direction: column; gap: 0.8rem; }
+
+  .credential-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--cream-dark);
+  }
+
+  .credential-list li::before {
+    content: '◆';
+    color: var(--gold);
+    font-size: 0.5rem;
+    margin-top: 0.45rem;
+    flex-shrink: 0;
+  }
+
+  .linkedin-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-top: 1.75rem;
+    padding: 0.75rem 1.4rem;
+    border: 1px solid rgba(201,168,76,0.35);
+    color: var(--gold);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .linkedin-btn:hover { background: rgba(201,168,76,0.08); border-color: var(--gold); }
+
+  .linkedin-btn svg { width: 16px; height: 16px; fill: currentColor; }
+
+  /* quote block */
+  .quote-block {
+    border-left: 2px solid var(--gold);
+    padding: 2rem 2rem;
+    background: rgba(201,168,76,0.04);
+    margin-bottom: 2rem;
+  }
+
+  .quote-block blockquote {
+    font-family: var(--font);
+    font-size: 1.2rem;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--cream);
+    margin-bottom: 1.25rem;
+  }
+
+  .quote-block cite {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-style: normal;
+  }
+
+  /* about MGM box */
+  .mgm-box {
+    background: rgba(13,27,42,0.6);
+    border: 1px solid rgba(201,168,76,0.15);
+    padding: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .mgm-box-icon {
+    width: 36px; height: 36px;
+    border: 1px solid rgba(201,168,76,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    flex-shrink: 0;
+    font-size: 1rem;
+  }
+
+  .mgm-box-text { font-size: 0.85rem; color: var(--text-muted); line-height: 1.65; }
+  .mgm-box-text strong { color: var(--cream); font-weight: 500; display: block; margin-bottom: 0.3rem; }
+
+  /* ── EBOOK ── */
+  .ebook-section {
+    padding: 5rem 4rem;
+    background: var(--navy-mid);
+    border-top: 1px solid rgba(201,168,76,0.1);
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ebook-section::before {
+    content: '';
+    position: absolute;
+    left: -100px; top: 50%;
+    transform: translateY(-50%);
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .ebook-mockup { position: relative; display: flex; justify-content: center; }
+
+  .ebook-cover {
+    width: 220px; height: 300px;
+    background: linear-gradient(135deg, var(--navy-light) 0%, #0d2137 100%);
+    border: 1px solid rgba(201,168,76,0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.5rem 1.25rem;
+    box-shadow: 24px 24px 60px rgba(0,0,0,0.5), -4px -4px 0 rgba(201,168,76,0.12);
+    transform: rotate(-2deg);
+  }
+
+  .ebook-cover-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: 3px 8px;
+    width: fit-content;
+  }
+
+  .ebook-cover-title {
+    font-family: var(--font);
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--white);
+  }
+
+  .ebook-cover-sub { font-size: 0.65rem; color: var(--text-muted); letter-spacing: 0.05em; }
+  .ebook-cover-author { font-size: 0.68rem; color: var(--gold); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.5rem; }
+
+  .ebook-desc {
+    font-size: 0.98rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    line-height: 1.82;
+    margin-bottom: 1.5rem;
+  }
+
+  .ebook-topics {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem;
+    margin-bottom: 2rem;
+  }
+
+  .ebook-topics li {
+    font-size: 0.82rem;
+    color: var(--cream-dark);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .ebook-topics li::before { content: '→'; color: var(--gold); font-size: 0.75rem; }
+
+  /* ── NEWSLETTER ── */
+  .newsletter {
+    padding: 6rem 4rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .newsletter::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 700px; height: 400px;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .newsletter-title {
+    font-family: var(--font);
+    font-size: clamp(1.9rem, 3.2vw, 2.9rem);
+    font-weight: 700;
+    color: var(--white);
+    max-width: 600px;
+    margin: 0 auto 1rem;
+    line-height: 1.22;
+  }
+
+  .newsletter-title em { color: var(--gold); font-style: normal; }
+
+  .newsletter-sub {
+    font-size: 0.98rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    max-width: 480px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.78;
+  }
+
+  .newsletter-form {
+    display: flex;
+    max-width: 480px;
+    margin: 0 auto 1.25rem;
+  }
+
+  .newsletter-form input {
+    flex: 1;
+    padding: 0.9rem 1.25rem;
+    background: var(--navy-mid);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-right: none;
+    color: var(--cream);
+    font-family: var(--font);
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .newsletter-form input::placeholder { color: var(--text-muted); }
+  .newsletter-form input:focus { border-color: rgba(201,168,76,0.5); }
+
+  .newsletter-form button {
+    padding: 0.9rem 1.5rem;
+    background: var(--gold);
+    color: var(--navy);
+    font-family: var(--font);
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .newsletter-form button:hover { background: var(--gold-light); }
+  .newsletter-note { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.04em; }
+
+  /* ── SOCIAL ── */
+  .social-section {
+    padding: 4rem 4rem 5rem;
+    background: var(--navy-mid);
+    border-top: 1px solid rgba(201,168,76,0.1);
+  }
+
+  .social-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    max-width: 960px;
+    margin: 2.5rem auto 0;
+  }
+
+  .social-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.75rem 0.75rem;
+    border: 1px solid rgba(245,240,232,0.08);
+    text-decoration: none;
+    color: var(--cream);
+    transition: border-color 0.25s, transform 0.2s, background 0.25s;
+    text-align: center;
+  }
+
+  .social-card:hover {
+    border-color: rgba(201,168,76,0.35);
+    background: rgba(201,168,76,0.04);
+    transform: translateY(-3px);
+  }
+
+  .social-icon {
+    width: 40px; height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(201,168,76,0.25);
+    color: var(--gold);
+  }
+
+  .social-icon svg { width: 18px; height: 18px; fill: currentColor; }
+
+  .social-name {
+    font-size: 0.76rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--cream);
+  }
+
+  .social-handle { font-size: 0.73rem; color: var(--text-muted); }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 2rem 4rem;
+    border-top: 1px solid rgba(201,168,76,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  footer .logo { font-family: var(--font); font-weight: 700; font-size: 1rem; color: var(--gold); }
+  footer p { font-size: 0.75rem; color: var(--text-muted); }
+  footer a { color: var(--text-muted); text-decoration: none; font-size: 0.75rem; transition: color 0.2s; }
+  footer a:hover { color: var(--gold); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow { animation: fadeUp 0.6s ease both; }
+  .hero-title   { animation: fadeUp 0.6s 0.1s ease both; }
+  .hero-subtitle{ animation: fadeUp 0.6s 0.2s ease both; }
+  .cta-group    { animation: fadeUp 0.6s 0.3s ease both; }
+  .hero-visual  { animation: fadeUp 0.8s 0.2s ease both; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 6rem 1.5rem 3rem; gap: 3rem; text-align: center; }
+    .hero-visual { order: -1; }
+    .hero-subtitle { margin: 0 auto 2rem; }
+    .cta-group { justify-content: center; }
+    .stats-bar { padding: 2rem 1.5rem; grid-template-columns: 1fr; gap: 1.5rem; }
+    .stat { border-right: none; border-bottom: 1px solid rgba(201,168,76,0.12); padding-bottom: 1.5rem; }
+    .stat:last-child { border-bottom: none; }
+    .about { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 2rem; }
+    .ebook-section { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 3rem; }
+    .newsletter { padding: 4rem 1.5rem; }
+    .newsletter-form { flex-direction: column; }
+    .newsletter-form input { border-right: 1px solid rgba(201,168,76,0.2); border-bottom: none; }
+    .social-section { padding: 3rem 1.5rem; }
+    .social-grid { grid-template-columns: repeat(2, 1fr); }
+    footer { flex-direction: column; text-align: center; padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#" class="nav-logo">Finanças com Dj</a>
+  <ul class="nav-links">
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#ebook">E-book</a></li>
+    <li><a href="#newsletter">Newsletter</a></li>
+    <li><a href="#contato">Redes</a></li>
+    <li>
+      <a href="https://www.linkedin.com/in/djailsonsilva/" target="_blank" rel="noopener" class="nav-linkedin">
+        <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor;"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        LinkedIn
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow">Assessor de Investimentos</div>
+    <h1 class="hero-title">
+      Inteligência financeira<br>
+      para quem quer <em>construir</em><br>
+      patrimônio de verdade.
+    </h1>
+    <p class="hero-subtitle">
+      Aqui você aprende a tomar decisões financeiras mais inteligentes — com linguagem clara, análise real e estratégias que funcionam no mercado brasileiro.
+    </p>
+    <div class="cta-group">
+      <a href="https://financascomdj.substack.com" target="_blank" class="btn-primary">
+        ✉&nbsp; Assinar a newsletter
+      </a>
+      <a href="#ebook" class="btn-secondary">
+        Baixar e-book grátis →
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="photo-frame">
+      <div class="photo-border"></div>
+      <div class="photo-placeholder">
+        <!-- SUBSTITUA AQUI: troque o conteúdo abaixo pela tag <img src="URL-DA-SUA-FOTO" style="width:100%;height:100%;object-fit:cover;"> -->
+        <div class="photo-initials">DJ</div>
+        <div class="photo-hint">Insira sua foto aqui</div>
+      </div>
+      <div class="badge-float">Assessor de<br>Investimentos</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ── -->
+<div class="stats-bar">
+  <div class="stat">
+    <!-- EDITE o número abaixo conforme seus leitores reais -->
+    <div class="stat-number">+1.200</div>
+    <div class="stat-label">Leitores na newsletter</div>
+  </div>
+  <div class="stat">
+    <!-- EDITE conforme seus seguidores no Instagram -->
+    <div class="stat-number">+500</div>
+    <div class="stat-label">Seguidores no Instagram</div>
+  </div>
+  <div class="stat">
+    <!-- EDITE conforme artigos publicados no blog -->
+    <div class="stat-number">+30</div>
+    <div class="stat-label">Artigos publicados</div>
+  </div>
+</div>
+
+<!-- ── SOBRE ── -->
+<section class="about" id="sobre">
+  <div>
+    <div class="section-label">Quem é Djailson</div>
+    <h2 class="section-title">Finanças que você entende<br>e consegue aplicar.</h2>
+
+    <p class="about-text">
+      Sou <strong>Djailson da Silva</strong>, assessor de investimentos com experiência no mercado de capitais brasileiro e educador financeiro focado em quem quer transformar sua relação com o dinheiro.
+    </p>
+    <p class="about-text">
+      Minha missão é simples: traduzir o complexo mundo das finanças em linguagem acessível — seguindo o mesmo princípio do professor Richard Feynman: <em style="color:var(--cream);">se não dá para explicar de forma simples, é porque ainda não foi entendido bem o suficiente.</em>
+    </p>
+    <p class="about-text">
+      Aqui você encontra conteúdo sobre investimentos, planejamento financeiro e educação econômica — tudo pensado para o investidor brasileiro que quer resultados reais.
+    </p>
+
+    <ul class="credential-list">
+      <li>Assessor de Investimentos — <strong style="color:var(--gold);">MGM Investimentos</strong></li>
+      <li>Especialista em planejamento financeiro e mercado de capitais</li>
+      <li>Educador financeiro com foco em jovens investidores</li>
+      <li>Newsletter semanal sobre mercado e finanças pessoais</li>
+      <li>Autor do e-book <em>Finanças para Jovens</em> — Geração Z e Millennials</li>
+    </ul>
+
+    <a href="https://www.linkedin.com/in/djailsonsilva/" target="_blank" rel="noopener" class="linkedin-btn">
+      <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      Ver perfil no LinkedIn
+    </a>
+  </div>
+
+  <div>
+    <div class="quote-block">
+      <blockquote>
+        "Se você não consegue explicar de forma simples, é porque ainda não entendeu bem o suficiente."
+      </blockquote>
+      <cite>— Richard Feynman · princípio que guia cada conteúdo aqui</cite>
+    </div>
+
+    <div class="mgm-box">
+      <div class="mgm-box-icon">◈</div>
+      <div class="mgm-box-text">
+        <strong>MGM Investimentos</strong>
+        Escritório de investimentos onde atuo como assessor, auxiliando clientes na construção e gestão de carteiras de investimentos alinhadas aos seus objetivos financeiros.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── EBOOK ── -->
+<section class="ebook-section" id="ebook">
+  <div class="ebook-mockup">
+    <div class="ebook-cover">
+      <div><div class="ebook-cover-tag">E-book Gratuito</div></div>
+      <div>
+        <div class="ebook-cover-title">Finanças para Jovens</div>
+        <div class="ebook-cover-sub" style="margin-top:0.4rem">Um Guia Prático para a<br>Geração Z e Millennials</div>
+      </div>
+      <div class="ebook-cover-author">Djailson Silva</div>
+    </div>
+  </div>
+  <div>
+    <div class="section-label">E-book gratuito</div>
+    <h2 class="section-title">Seu ponto de partida para investir com inteligência.</h2>
+    <p class="ebook-desc">
+      Um guia direto ao ponto para brasileiros de 18 a 30 anos que querem organizar as finanças, sair das dívidas e começar a investir — mesmo do zero. Linguagem simples, exemplos reais.
+    </p>
+    <ul class="ebook-topics">
+      <li>Orçamento na prática</li>
+      <li>Reserva de emergência</li>
+      <li>Primeiros investimentos</li>
+      <li>Como sair das dívidas</li>
+      <li>Loud budgeting</li>
+      <li>Mentalidade financeira</li>
+    </ul>
+    <a href="https://financascomdj.com.br/biblioteca/" target="_blank" class="btn-primary">
+      Baixar gratuitamente →
+    </a>
+  </div>
+</section>
+
+<!-- ── NEWSLETTER ── -->
+<section class="newsletter" id="newsletter">
+  <div class="section-label" style="justify-content:center;">Newsletter semanal · Substack</div>
+  <h2 class="newsletter-title">
+    Mercado financeiro<br>sem <em>enrolação</em>.
+  </h2>
+  <p class="newsletter-sub">
+    Toda semana: análise de mercado, balanços de empresas destrinchados e estratégias práticas — direto no seu e-mail. Grátis, sempre.
+  </p>
+  <form class="newsletter-form" onsubmit="handleSubscribe(event)">
+    <input type="email" placeholder="seu@email.com" required id="email-input">
+    <button type="submit">Assinar grátis</button>
+  </form>
+  <p class="newsletter-note">Sem spam. Cancele quando quiser.</p>
+</section>
+
+<!-- ── REDES SOCIAIS ── -->
+<section class="social-section" id="contato">
+  <div style="text-align:center;">
+    <div class="section-label" style="justify-content:center;">Me encontre nas redes</div>
+    <h2 class="section-title" style="text-align:center; max-width:380px; margin:0 auto;">Conecte-se e acompanhe<br>o conteúdo.</h2>
+  </div>
+  <div class="social-grid">
+
+    <!-- SUBSTACK -->
+    <a href="https://financascomdj.substack.com" target="_blank" rel="noopener" class="social-card">
+      <div class="social-icon">
+        <svg viewBox="0 0 24 24"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+      </div>
+      <div class="social-name">Newsletter</div>
+      <div class="social-handle">Substack</div>
+    </a>
+
+    <!-- INSTAGRAM -->
+    <a href="https://instagram.com/financascomdj" target="_blank" rel="noopener" class="social-card">
+      <div class="social-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+      </div>
+      <div class="social-name">Instagram</div>
+      <div class="social-handle">@financascomdj</div>
+    </a>
+
+    <!-- WHATSAPP -->
+    <a href="https://wa.me/message/MVAJYLAOUB7QD1" target="_blank" rel="noopener" class="social-card">
+      <div class="social-icon">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+      </div>
+      <div class="social-name">WhatsApp</div>
+      <div class="social-handle">Comunidade</div>
+    </a>
+
+    <!-- TELEGRAM -->
+    <a href="https://t.me/financascomdj" target="_blank" rel="noopener" class="social-card">
+      <div class="social-icon">
+        <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      </div>
+      <div class="social-name">Telegram</div>
+      <div class="social-handle">@financascomdj</div>
+    </a>
+
+    <!-- LINKEDIN -->
+    <a href="https://www.linkedin.com/in/djailsonsilva/" target="_blank" rel="noopener" class="social-card">
+      <div class="social-icon">
+        <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </div>
+      <div class="social-name">LinkedIn</div>
+      <div class="social-handle">djailsonsilva</div>
+    </a>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="logo">Finanças com Dj</div>
+  <p>© 2026 Djailson Silva · Assessor de Investimentos</p>
+  <div style="display:flex; gap:1.5rem;">
+    <a href="https://financascomdj.com.br/privacy-policy/" target="_blank">Privacidade</a>
+    <a href="https://www.linkedin.com/in/djailsonsilva/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://financascomdj.com.br/contato/" target="_blank">Contato</a>
+  </div>
+</footer>
+
+<script>
+function handleSubscribe(e) {
+  e.preventDefault();
+  const email = document.getElementById('email-input').value;
+  window.open('https://financascomdj.substack.com/subscribe?email=' + encodeURIComponent(email), '_blank');
+}
+</script>
+
+</body>
+</html>
