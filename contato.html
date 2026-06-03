@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contato — Finanças com Dj</title>
+<meta name="description" content="Entre em contato com Djailson Silva, assessor de investimentos. Dúvidas sobre finanças, investimentos ou parcerias.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: #0d1b2a; color: #f5f0e8; font-family: 'Ubuntu', sans-serif; -webkit-font-smoothing: antialiased; line-height: 1.7; }
+a { color: #c9a84c; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+  padding: 1.1rem 2.5rem;
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(13,27,42,0.95); backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(201,168,76,0.15);
+}
+.nav-logo { font-weight: 700; font-size: 1.05rem; color: #c9a84c; text-decoration: none; }
+.nav-back { font-size: 0.8rem; color: #8a9ab0; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+.nav-back:hover { color: #c9a84c; text-decoration: none; }
+
+.container { max-width: 780px; margin: 0 auto; padding: 7rem 2rem 5rem; }
+
+.page-label {
+  font-size: 0.7rem; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: #c9a84c;
+  display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.5rem;
+}
+.page-label::before { content: ''; display: block; width: 26px; height: 1px; background: #c9a84c; }
+
+h1 { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 700; color: #fff; line-height: 1.2; margin-bottom: 0.75rem; }
+.subtitle { font-size: 1rem; font-weight: 300; color: #8a9ab0; margin-bottom: 3rem; max-width: 520px; line-height: 1.75; }
+
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; }
+
+.channel-card {
+  background: #1a2d42;
+  border: 1px solid rgba(201,168,76,0.12);
+  padding: 1.75rem 1.5rem;
+  display: flex; flex-direction: column; gap: 0.75rem;
+  transition: border-color 0.2s, transform 0.2s;
+  text-decoration: none;
+  color: #f5f0e8;
+}
+.channel-card:hover { border-color: rgba(201,168,76,0.4); transform: translateY(-2px); text-decoration: none; }
+
+.channel-icon {
+  width: 42px; height: 42px;
+  border: 1px solid rgba(201,168,76,0.25);
+  display: flex; align-items: center; justify-content: center;
+  color: #c9a84c;
+}
+.channel-icon svg { width: 18px; height: 18px; fill: currentColor; }
+.channel-name { font-size: 0.8rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #f5f0e8; }
+.channel-desc { font-size: 0.85rem; color: #8a9ab0; line-height: 1.6; }
+.channel-handle { font-size: 0.8rem; color: #c9a84c; }
+
+.divider { border: none; border-top: 1px solid rgba(201,168,76,0.12); margin: 2.5rem 0; }
+
+h2 { font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 1rem; }
+
+.form-group { margin-bottom: 1.25rem; }
+label { display: block; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: #8a9ab0; margin-bottom: 0.5rem; }
+input, textarea, select {
+  width: 100%; padding: 0.85rem 1rem;
+  background: #1a2d42; border: 1px solid rgba(201,168,76,0.18);
+  color: #f5f0e8; font-family: 'Ubuntu', sans-serif; font-size: 0.92rem;
+  outline: none; transition: border-color 0.2s;
+  border-radius: 0;
+  -webkit-appearance: none;
+}
+input:focus, textarea:focus, select:focus { border-color: rgba(201,168,76,0.5); }
+input::placeholder, textarea::placeholder { color: #4a5a6a; }
+textarea { resize: vertical; min-height: 130px; }
+select option { background: #1a2d42; color: #f5f0e8; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+.btn-submit {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.9rem 2rem;
+  background: #c9a84c; color: #0d1b2a;
+  font-family: 'Ubuntu', sans-serif; font-size: 0.85rem; font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  border: none; cursor: pointer; transition: background 0.2s, transform 0.15s;
+  margin-top: 0.5rem;
+}
+.btn-submit:hover { background: #e2c97e; transform: translateY(-1px); }
+
+.form-note { font-size: 0.75rem; color: #8a9ab0; margin-top: 0.75rem; }
+
+.success-msg {
+  display: none; background: rgba(29,158,117,0.1);
+  border: 1px solid rgba(29,158,117,0.3);
+  padding: 1rem 1.25rem; color: #1D9E75;
+  font-size: 0.9rem; margin-top: 1rem;
+}
+
+footer {
+  margin-top: 4rem; padding: 2rem 0;
+  border-top: 1px solid rgba(201,168,76,0.12);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+}
+footer p { font-size: 0.75rem; color: #8a9ab0; }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a { font-size: 0.75rem; color: #8a9ab0; }
+.footer-links a:hover { color: #c9a84c; }
+
+@media (max-width: 640px) {
+  .nav { padding: 1rem 1.25rem; }
+  .container { padding: 6rem 1.25rem 3rem; }
+  .grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  footer { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">Finanças com Dj</a>
+  <a href="/" class="nav-back">← Voltar ao início</a>
+</nav>
+
+<div class="container">
+  <div class="page-label">Fale comigo</div>
+  <h1>Entre em contato</h1>
+  <p class="subtitle">Dúvidas sobre finanças, investimentos, parcerias ou conteúdo — escolha o canal de preferência ou preencha o formulário abaixo.</p>
+
+  <!-- CANAIS DIRETOS -->
+  <div class="grid">
+
+    <a href="https://wa.me/message/MVAJYLAOUB7QD1" target="_blank" rel="noopener" class="channel-card">
+      <div class="channel-icon">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+      </div>
+      <div class="channel-name">WhatsApp</div>
+      <div class="channel-desc">Canal mais rápido para dúvidas rápidas e contato direto.</div>
+      <div class="channel-handle">Comunidade →</div>
+    </a>
+
+    <a href="https://instagram.com/financascomdj" target="_blank" rel="noopener" class="channel-card">
+      <div class="channel-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+      </div>
+      <div class="channel-name">Instagram</div>
+      <div class="channel-desc">Conteúdo diário sobre finanças, investimentos e mercado.</div>
+      <div class="channel-handle">@financascomdj →</div>
+    </a>
+
+    <a href="https://www.linkedin.com/in/djailsonsilva/" target="_blank" rel="noopener" class="channel-card">
+      <div class="channel-icon">
+        <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </div>
+      <div class="channel-name">LinkedIn</div>
+      <div class="channel-desc">Conexões profissionais e parcerias no mercado financeiro.</div>
+      <div class="channel-handle">djailsonsilva →</div>
+    </a>
+
+    <a href="https://substack.com/@financascomdj" target="_blank" rel="noopener" class="channel-card">
+      <div class="channel-icon">
+        <svg viewBox="0 0 24 24"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+      </div>
+      <div class="channel-name">Newsletter</div>
+      <div class="channel-desc">Assine para receber análises e conteúdos periódicos.</div>
+      <div class="channel-handle">Substack →</div>
+    </a>
+
+  </div>
+
+  <hr class="divider">
+
+  <!-- FORMULÁRIO -->
+  <h2>Ou envie uma mensagem</h2>
+
+  <form id="contact-form" onsubmit="handleSubmit(event)">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required>
+      </div>
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="assunto">Assunto</label>
+      <select id="assunto" name="assunto" required>
+        <option value="" disabled selected>Selecione o assunto</option>
+        <option value="duvida">Dúvida sobre finanças ou investimentos</option>
+        <option value="newsletter">Newsletter ou conteúdo</option>
+        <option value="parceria">Parceria ou colaboração</option>
+        <option value="assessoria">Assessoria de investimentos</option>
+        <option value="outro">Outro assunto</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="mensagem">Mensagem</label>
+      <textarea id="mensagem" name="mensagem" placeholder="Escreva sua mensagem aqui..." required></textarea>
+    </div>
+
+    <button type="submit" class="btn-submit">Enviar mensagem →</button>
+    <p class="form-note">Responderei em até 2 dias úteis. Seus dados não serão compartilhados com terceiros.</p>
+
+    <div class="success-msg" id="success-msg">
+      ✓ Mensagem enviada! Entrarei em contato em breve.
+    </div>
+  </form>
+
+  <footer>
+    <p>© 2026 Djailson Silva · Finanças com Dj</p>
+    <div class="footer-links">
+      <a href="/">Início</a>
+      <a href="/privacidade.html">Privacidade</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+function handleSubmit(e) {
+  e.preventDefault();
+  const nome = document.getElementById('nome').value;
+  const email = document.getElementById('email').value;
+  const assunto = document.getElementById('assunto').value;
+  const mensagem = document.getElementById('mensagem').value;
+
+  // Abre WhatsApp com a mensagem formatada como fallback funcional
+  const texto = `Olá Djailson! Me chamo ${nome} (${email}).\n\nAssunto: ${assunto}\n\n${mensagem}`;
+  window.open('https://wa.me/message/MVAJYLAOUB7QD1?text=' + encodeURIComponent(texto), '_blank');
+
+  document.getElementById('success-msg').style.display = 'block';
+  e.target.reset();
+}
+</script>
+
+</body>
+</html>
